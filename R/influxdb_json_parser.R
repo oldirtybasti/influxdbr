@@ -74,6 +74,7 @@ query_list_to_tibble <- function(x, timestamp_format) {
         `if`(performance, timer(., "setting column names"), .) %>% 
         purrr::map2(., .y  = series_columns, ~ purrr::set_names(., nm = .y)) %>%
         # influxdb ALWAYS stores data in GMT!!
+      browser()
         `if`(performance, timer(., "set POSIX-based time index"), .) %>% 
         purrr::map( ~ purrr::map_at(., .at = "time",
                                     ~ as.POSIXct(. / div, 
