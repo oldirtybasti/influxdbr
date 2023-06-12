@@ -63,14 +63,22 @@ influx_query <- function(con,
   # debug_data <<- httr::content(response, "text", encoding="UTF-8")
   
   # initiate data conversion which result in a tibble with list-columns
-  list_of_result <-
-    httr::content(response, "text", encoding = "UTF-8") %>%  # convert to chars
-    purrr::map(response_to_list) %>% # from json to list
-    purrr::map(query_list_to_tibble, # from list to tibble
-               timestamp_format = timestamp_format) %>% 
-    purrr::flatten(.) %>% 
-    # set 'result_na' tibble to NULL
-    purrr::map_if(result_is_empty, ~ NULL)
+  #browser()
+  #list_of_result <-
+  #  httr::content(response, "text", encoding = "UTF-8") %>%  # convert to chars
+  #  purrr::map(response_to_list) %>% # from json to list
+  #  purrr::map(query_list_to_tibble, # from list to tibble
+  #             timestamp_format = timestamp_format) %>% 
+  #  purrr::flatten(.) %>% 
+  #  # set 'result_na' tibble to NULL
+  #  purrr::map_if(result_is_empty, ~ NULL)
+	
+	
+  content <- httr::content(response, "text", encoding = "UTF-8")
+  list <- purrr::map(content, response_to_list)
+  listTibble <- purrr::map(list, query_list_to_tibble, timestamp_format = timestamp_format)
+  flat <- purrr::flatten(listTibble)
+  list_of_result <- purrr::map_if(flat, result_is_empty, ~ NULL)
   
   # xts object required?
   if (return_xts) 
