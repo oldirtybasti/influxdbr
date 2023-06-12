@@ -79,7 +79,7 @@ query_list_to_tibble <- function(x, timestamp_format) {
                                     ~ as.POSIXct(. / div, 
                                                  origin = "1970-1-1",
                                                  tz = "GMT")) %>%
-                      tibble::as_tibble(.))
+                    tiblle::as_tibble(.name_repair = "minimal"))
 
       # is partial?
       series_partial <-
